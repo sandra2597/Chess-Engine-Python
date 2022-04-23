@@ -1,6 +1,6 @@
 from .interfaces import Piece
 from typing import List
-from app.schema import Position
+from app.schema import Position, Displacement
 
 class King(Piece):
     """
@@ -10,4 +10,21 @@ class King(Piece):
         """
         Returns list of allowed moves for the piece
         """
-        return []
+        displacements = [
+            Displacement(x=-1, y=1),
+            Displacement(x=-1, y=0),
+            Displacement(x=-1, y=-1),
+            Displacement(x=0, y=1),
+            Displacement(x=0, y=-1),
+            Displacement(x=1, y=1),
+            Displacement(x=1, y=0),
+            Displacement(x=1, y=-1),
+        ]
+        allowed_moves = []
+        for displacement in displacements:
+            new_position = self.__class__.calc_new_position(self.position, displacement)
+            if new_position is not None and self.check_field_available(new_position, pieces):
+                allowed_moves.append(new_position)
+
+
+        return allowed_moves
