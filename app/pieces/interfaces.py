@@ -1,6 +1,6 @@
-from typing import List, Literal
+from typing import List, Literal, Optional
 from abc import ABC, abstractmethod
-from app.schema import Position
+from app.schema import Displacement, Position
 
 
 class Piece(ABC):
@@ -16,6 +16,21 @@ class Piece(ABC):
         self.position = position
         self.color = color
         self.has_moved = False
+
+    @classmethod
+    def calc_new_position(cls, old_position: Position, displacement: Displacement) -> Optional[Position]:
+        new_x = old_position.x + displacement.x
+        new_y = old_position.y + displacement.y
+        try:
+            return Position(x=new_x, y=new_y)
+        except ValueError:
+            return None 
+
+    def check_field_available(self, position: Position, pieces: List["Piece"]) -> bool:
+        for piece in pieces:
+            if piece.color == self.color and piece.position == position:
+                return False
+        return True
 
     @abstractmethod
     def get_allowed_moves(self, pieces: List["Piece"]) -> List[Position]:
