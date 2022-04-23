@@ -32,6 +32,13 @@ class Piece(ABC):
                 return False
         return True
 
+    def check_field_occupied_by_opponent(self, position: Position, pieces: List["Piece"]) -> bool:
+        for piece in pieces:
+            if piece.color != self.color and piece.position == position:
+                return True
+        return False
+
+
     @abstractmethod
     def get_allowed_moves(self, pieces: List["Piece"]) -> List[Position]:
         """
