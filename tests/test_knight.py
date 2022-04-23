@@ -5,96 +5,54 @@ from app.schema import Position
 from typing import List
 import pytest
 
-
-def test_attributes():
+def test_calc_moves_1():
     position = Position(x=0, y=0)
     color = 'W'
     piece = Knight(position, color)
-    assert hasattr(piece, 'position')
-    assert hasattr(piece, 'color')
-    assert hasattr(piece, 'has_moved')
+    known_fields = []
+    known_fields.append(Position(x=1, y=2))
+    known_fields.append(Position(x=2, y=1))
+    possible_fields = piece.get_allowed_moves([])
+    assert len(possible_fields) == len(known_fields)
+    for known_field in known_fields:
+        assert known_field in possible_fields
 
-
-def test_methods():
-    position = Position(x=0, y=0)
+def test_calc_moves_2():
+    position = Position(x=4, y=5)
     color = 'W'
     piece = Knight(position, color)
-    assert hasattr(piece, 'get_allowed_moves')
-    get_allowed_moves_method = getattr(piece, 'get_allowed_moves')
-    assert callable(get_allowed_moves_method)
-    assert hasattr(piece, 'move')
-    move_method = getattr(piece, 'move')
-    assert callable(move_method)
-    assert hasattr(piece, 'virtual_move')
-    virtual_move_method = getattr(piece, 'virtual_move')
-    assert callable(virtual_move_method)
+    known_fields = []
+    known_fields.append(Position(x=2, y=6))
+    known_fields.append(Position(x=2, y=4))
+    known_fields.append(Position(x=3, y=7))
+    known_fields.append(Position(x=3, y=3))
+    known_fields.append(Position(x=5, y=7))
+    known_fields.append(Position(x=5, y=3))
+    known_fields.append(Position(x=6, y=6))
+    known_fields.append(Position(x=6, y=4))
+    possible_fields = piece.get_allowed_moves([])
+    assert len(possible_fields) == len(known_fields)
+    for known_field in known_fields:
+        assert known_field in possible_fields
 
-
-def test_get_allowed_moves():
-    position = Position(x=0, y=0)
-    color = 'W'
+def test_calc_moves_3():
+    position = Position(x=4, y=5)
+    color = 'B'
     piece = Knight(position, color)
-    allowed_moves = piece.get_allowed_moves([])
-    assert isinstance(allowed_moves, List)
+    known_fields = []
+    known_fields.append(Position(x=2, y=6))
+    known_fields.append(Position(x=2, y=4))
+    known_fields.append(Position(x=3, y=3))
+    known_fields.append(Position(x=5, y=7))
+    known_fields.append(Position(x=5, y=3))
+    known_fields.append(Position(x=6, y=6))
+    known_fields.append(Position(x=6, y=4))
 
-
-def test_init_position_validation():
-    position = [0, 0]
-    color = 'W'
-    with pytest.raises(TypeError):
-        Knight(position, color)
-
-
-def test_init_color_validation1():
-    position = Position(x=0, y=0)
-    color = 'Z'
-    with pytest.raises(Exception):
-        Knight(position, color)
-
-
-def test_init_color_validation2():
-    position = Position(x=0, y=0)
-    color = 0
-    with pytest.raises(Exception):
-        Knight(position, color)
-
-
-def test_move_position_validation():
-    position = Position(x=0, y=0)
-    color = 'W'
-    piece = Knight(position, color)
-    with pytest.raises(TypeError):
-        piece.move([1, 1])
-
-
-def test_virtual_move_position_validation():
-    position = Position(x=0, y=0)
-    color = 'W'
-    piece = Knight(position, color)
-    with pytest.raises(TypeError):
-        piece.move([1, 1])
-
-def test_has_moved_flag():
-    position = Position(x=0, y=0)
-    color = 'W'
-    piece = Knight(position, color)
-    assert piece.has_moved == False
-    new_position = Position(x=1, y=2)
-    piece.move(new_position)
-    assert piece.has_moved
-
-def test_piece_moved():
-    position = Position(x=0, y=0)
-    color = 'W'
-    piece = Knight(position, color)
-    new_position = Position(x=1, y=2)
-    piece.move(new_position)
-    assert piece.position == new_position
-
-def test_piece_moved_virtual():
-    position = Position(x=0, y=0)
-    color = 'W'
-    piece = Knight(position, color)
-    new_position = Position(x=1, y=2)
-    piece.virtual_move(new_position)
-    assert piece.position == new_position
+    other_pieces = []
+    other_pieces.append(
+        Knight(position=Position(x=3,y=7), color='B')
+    )
+    possible_fields = piece.get_allowed_moves(other_pieces)
+    assert len(possible_fields) == len(known_fields)
+    for known_field in known_fields:
+        assert known_field in possible_fields
