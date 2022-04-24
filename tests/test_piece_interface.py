@@ -5,6 +5,7 @@ from app.pieces.interfaces import Piece as PieceBase
 from app.schema import Displacement, Position
 from typing import List
 import pytest
+from .utils import create_other_piece_dict
 
 class Piece(PieceBase):
     def get_allowed_moves(self, pieces: List["Piece"]) -> List[Position]:
@@ -117,10 +118,12 @@ def test_field_available():
         Piece(position=Position(x=6,y=6), color='W'),
         Piece(position=Position(x=1,y=2), color='B')
     ]
-    assert piece.check_field_available(Position(x=6, y=6), other_pieces) == False
+    other_pieces_dict = create_other_piece_dict(other_pieces)
+    assert piece.check_field_available(Position(x=6, y=6), other_pieces_dict) == False
     other_pieces = [
         Piece(position=Position(x=0,y=0), color='W'),
         Piece(position=Position(x=6,y=5), color='W'),
         Piece(position=Position(x=6,y=6), color='B')
     ]
-    assert piece.check_field_available(Position(x=6, y=6), other_pieces)
+    other_pieces_dict = create_other_piece_dict(other_pieces)
+    assert piece.check_field_available(Position(x=6, y=6), other_pieces_dict)

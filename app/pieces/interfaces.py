@@ -1,4 +1,4 @@
-from typing import List, Literal, Optional
+from typing import Dict, List, Literal, Optional
 from abc import ABC, abstractmethod
 from app.schema import Displacement, Position
 
@@ -18,6 +18,11 @@ class Piece(ABC):
         self.has_moved = False
 
     @classmethod
+    def calc_position_string(cls, position: Position):
+        return f"{position.x}{position.y}"
+
+
+    @classmethod
     def calc_new_position(cls, old_position: Position, displacement: Displacement) -> Optional[Position]:
         new_x = old_position.x + displacement.x
         new_y = old_position.y + displacement.y
@@ -26,17 +31,23 @@ class Piece(ABC):
         except ValueError:
             return None 
 
-    def check_field_available(self, position: Position, pieces: List["Piece"]) -> bool:
-        for piece in pieces:
-            if piece.color == self.color and piece.position == position:
-                return False
+    def check_field_available(self, position: Position, pieces: Dict[str, "Piece"]) -> bool:
+        position_string = self.__class__.calc_position_string(position)
+        if not position_string in pieces.keys():
+            return True
+        piece = pieces[position_string]
+        if piece.color == self.color:
+            return False
         return True
 
-    def check_field_occupied_by_opponent(self, position: Position, pieces: List["Piece"]) -> bool:
-        for piece in pieces:
-            if piece.color != self.color and piece.position == position:
-                return True
-        return False
+    def check_field_occupied_by_opponent(self, position: Position, pieces: Dict[str, "Piece"]) -> bool:
+        position_string = self.__class__.calc_position_string(position)
+        if not position_string in pieces.keys():
+            return False
+        piece = pieces[position_string]
+        if piece.color == self.color:
+            return False
+        return True
 
 
     @abstractmethod
