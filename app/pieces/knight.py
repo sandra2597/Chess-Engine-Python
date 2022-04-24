@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from app.schema import Position, Displacement
 from .interfaces import Piece
 
@@ -7,7 +7,7 @@ class Knight(Piece):
     Class for the knight in chess
     """
 
-    def get_allowed_moves(self, pieces: List["Piece"]) -> List[Position]:
+    def get_allowed_moves(self, pieces: Dict[str,"Piece"]) -> List[Position]:
         """
         Returns list of allowed moves for the piece
         """

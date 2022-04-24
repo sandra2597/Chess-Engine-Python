@@ -6,12 +6,7 @@ from app.schema import Position
 from typing import List
 import pytest
 
-# type: ignore
-
-from app.pieces import Rook
-from app.schema import Position
-from typing import List
-import pytest
+from .utils import create_other_piece_dict
 
 def test_calc_moves_1():
     position = Position(x=0, y=0)
@@ -32,7 +27,7 @@ def test_calc_moves_1():
     known_fields.append(Position(x=5, y=0))
     known_fields.append(Position(x=6, y=0))
     known_fields.append(Position(x=7, y=0))
-    possible_fields = piece.get_allowed_moves([])
+    possible_fields = piece.get_allowed_moves({})
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
@@ -57,7 +52,8 @@ def test_calc_moves_2():
     other_pieces.append(
         Knight(position=Position(x=3,y=0), color='B')
     )
-    possible_fields = piece.get_allowed_moves(other_pieces)
+    other_pieces_dict = create_other_piece_dict(other_pieces)
+    possible_fields = piece.get_allowed_moves(other_pieces_dict)
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
@@ -84,7 +80,8 @@ def test_calc_moves_3():
     other_pieces.append(
         King(position=Position(x=5,y=2), color='B')
     )
-    possible_fields = piece.get_allowed_moves(other_pieces)
+    other_pieces_dict = create_other_piece_dict(other_pieces)
+    possible_fields = piece.get_allowed_moves(other_pieces_dict)
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields

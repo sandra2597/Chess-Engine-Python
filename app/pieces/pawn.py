@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 from app.schema import Position, Displacement
 from .interfaces import Piece
 
@@ -33,13 +33,13 @@ class Pawn(Piece):
                 displacements.append(Displacement(x=0, y=-2))
         return displacements
 
-    def check_field_available(self, position: Position, pieces: List["Piece"]) -> bool:
+    def check_field_available(self, position: Position, pieces:Dict[str,"Piece"]) -> bool:
         """
         Checks whether the target field is available when moving (not taking) with the pawn
         """
-        for piece in pieces:
-            if piece.position == position:
-                return False
+        position_string = self.__class__.calc_position_string(position)
+        if position_string in pieces.keys():
+            return False
         return True
 
     def __get_possible_take_displacements(self) -> List[Displacement]:
@@ -56,7 +56,7 @@ class Pawn(Piece):
             Displacement(x=1, y=-1),
         ]
 
-    def get_allowed_moves(self, pieces: List["Piece"]) -> List[Position]:
+    def get_allowed_moves(self, pieces:Dict[str,"Piece"]) -> List[Position]:
         """
         Returns list of allowed moves for the piece
         """

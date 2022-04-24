@@ -1,9 +1,9 @@
-# type: ignore
-
+#type: ignore[reportGeneralTypeIssues]
 from app.pieces import Pawn, Knight, King
 from app.schema import Position
 from typing import List
 import pytest
+from .utils import create_other_piece_dict
 
 def test_second_row_check_1():
     position = Position(x=4, y=2)
@@ -29,11 +29,13 @@ def test_field_available():
     piece = Pawn(position, color)
     tested_position = Position(x=4, y=3)
     added_pieces = []
-    assert piece.check_field_available(tested_position, added_pieces)
+    added_pieces_dict = create_other_piece_dict(added_pieces)
+    assert piece.check_field_available(tested_position, added_pieces_dict)
     added_pieces.append(
         Knight(position=Position(x=4,y=3), color='B')
     )
-    assert piece.check_field_available(tested_position, added_pieces) ==False
+    added_pieces_dict = create_other_piece_dict(added_pieces)
+    assert piece.check_field_available(tested_position, added_pieces_dict) ==False
 
 
 def test_calc_moves_white_1():
@@ -42,7 +44,7 @@ def test_calc_moves_white_1():
     piece = Pawn(position, color)
     known_fields = []
     known_fields.append(Position(x=4, y=3))
-    possible_fields = piece.get_allowed_moves([])
+    possible_fields = piece.get_allowed_moves({})
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
@@ -54,7 +56,7 @@ def test_calc_moves_white_2():
     known_fields = []
     known_fields.append(Position(x=4, y=2))
     known_fields.append(Position(x=4, y=3))
-    possible_fields = piece.get_allowed_moves([])
+    possible_fields = piece.get_allowed_moves({})
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
@@ -69,7 +71,8 @@ def test_calc_moves_white_3():
     other_pieces.append(
         Knight(position=Position(x=4,y=3), color='B')
     )
-    possible_fields = piece.get_allowed_moves(other_pieces)
+    other_pieces_dict = create_other_piece_dict(other_pieces)
+    possible_fields = piece.get_allowed_moves(other_pieces_dict)
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
@@ -87,7 +90,8 @@ def test_calc_moves_white_4():
     other_pieces.append(
         Knight(position=Position(x=3,y=3), color='B')
     )
-    possible_fields = piece.get_allowed_moves(other_pieces)
+    other_pieces_dict = create_other_piece_dict(other_pieces)
+    possible_fields = piece.get_allowed_moves(other_pieces_dict)
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
@@ -99,7 +103,7 @@ def test_calc_moves_black_1():
     piece = Pawn(position, color)
     known_fields = []
     known_fields.append(Position(x=4, y=4))
-    possible_fields = piece.get_allowed_moves([])
+    possible_fields = piece.get_allowed_moves({})
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
@@ -111,7 +115,7 @@ def test_calc_moves_black_2():
     known_fields = []
     known_fields.append(Position(x=4, y=5))
     known_fields.append(Position(x=4, y=4))
-    possible_fields = piece.get_allowed_moves([])
+    possible_fields = piece.get_allowed_moves({})
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
@@ -126,7 +130,8 @@ def test_calc_moves_black_3():
     other_pieces.append(
         Knight(position=Position(x=4,y=4), color='B')
     )
-    possible_fields = piece.get_allowed_moves(other_pieces)
+    other_pieces_dict = create_other_piece_dict(other_pieces)
+    possible_fields = piece.get_allowed_moves(other_pieces_dict)
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
@@ -144,7 +149,8 @@ def test_calc_moves_black_4():
     other_pieces.append(
         Knight(position=Position(x=3,y=4), color='W')
     )
-    possible_fields = piece.get_allowed_moves(other_pieces)
+    other_pieces_dict = create_other_piece_dict(other_pieces)
+    possible_fields = piece.get_allowed_moves(other_pieces_dict)
     assert len(possible_fields) == len(known_fields)
     for known_field in known_fields:
         assert known_field in possible_fields
