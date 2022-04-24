@@ -1,6 +1,6 @@
-from .interfaces import Piece
 from typing import List
 from app.schema import Position, Displacement
+from .interfaces import Piece
 
 class Knight(Piece):
     """
